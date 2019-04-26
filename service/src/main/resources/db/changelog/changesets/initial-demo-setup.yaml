@@ -5,7 +5,7 @@ databaseChangeLog:
     changes:
     - createSequence:
         sequenceName: hibernate_sequence
-        minValue: 111
+        minValue: 100
     - createTable:
         tableName: mobile_subscription
         columns:

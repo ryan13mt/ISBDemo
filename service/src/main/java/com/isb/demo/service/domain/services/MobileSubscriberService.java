@@ -8,8 +8,10 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @AllArgsConstructor
 public class MobileSubscriberService {
@@ -25,8 +27,10 @@ public class MobileSubscriberService {
     }
 
     public MobileSubscription add(@NotNull @Valid final MobileSubscription mobileSubscription) {
+        log.trace("Checking if Mobile Subscription with msisdn %s already exists", mobileSubscription.getMsisdn());
         final List<MobileSubscription> existingSubscription = find(new MobileSubscriptionFilter().setMsisdn(mobileSubscription.getMsisdn()));
         if (!existingSubscription.isEmpty()) {
+            log.trace("Mobile Subscription found with matching msisdn %s", mobileSubscription.getMsisdn());
             throw new IllegalStateException(String.format("Mobile subscription with number %s already exists", mobileSubscription.getMsisdn()));
         }
         return mobileSubscriptionDao.add(mobileSubscription);
