@@ -1,0 +1,38 @@
+spring:
+  h2:
+    console:
+      enabled: true
+
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+
+  jpa:
+    generate-ddl: false
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: ${database.schema}
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+
+  datasource:
+    url: jdbc:h2:mem:demo;DB_CLOSE_ON_EXIT=FALSE;INIT=CREATE SCHEMA IF NOT EXISTS ${database.schema}\;SET SCHEMA ${database.schema}
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+database:
+  schema: demo
+
+debug: false
+logging:
+  level:
+    com.*: trace
+
+server:
+  port: 26000
+  servlet:
+    context-path: /
