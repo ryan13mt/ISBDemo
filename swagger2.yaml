@@ -1,0 +1,209 @@
+swagger: '2.0'
+info:
+  description: Api Documentation
+  version: '1.0'
+  title: Api Documentation
+  termsOfService: 'urn:tos'
+  contact: {}
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0'
+host: 'localhost:26000'
+basePath: /
+tags:
+- name: mobile-controller
+  description: Mobile Controller
+paths:
+  /mobileSubscription:
+    get:
+      tags:
+      - mobile-controller
+      summary: 'Get a list of mobile subscribers related with the filtering criteria provided. If no filter is present, return all mobile subscribers.'
+      operationId: getMobileSubscriptionsUsingGET
+      produces:
+      - application/json;charset=UTF-8
+      parameters:
+      - name: customerIdOwner
+        in: query
+        required: false
+        type: integer
+        format: int32
+      - name: customerIdUser
+        in: query
+        required: false
+        type: integer
+        format: int32
+      - name: msisdn
+        in: query
+        required: false
+        type: string
+      - name: serviceStartDateFrom
+        in: query
+        required: false
+        type: integer
+        format: int64
+      - name: serviceStartDateTo
+        in: query
+        required: false
+        type: integer
+        format: int64
+      - name: serviceType
+        in: query
+        required: false
+        type: string
+        enum:
+        - MOBILE_PREPAID
+        - MOBILE_POSTPAID
+      responses:
+        '200':
+          description: The request has been successfully processed and a list of applicable mobile subscriptions will be presented if any exists.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MobileSubscriptionDto'
+        '400':
+          description: The request is rejected because it was not understood by the server due to malformed syntax. Do not repeat the request without modifications.
+        '422':
+          description: The request is rejected because the server was unable to process the given request due to semantic validations. Do not repeat the request without modifications.
+      deprecated: false
+    post:
+      tags:
+      - mobile-controller
+      summary: Add a mobile subscription.
+      operationId: addMobileSubscriptionUsingPOST
+      consumes:
+      - application/json
+      produces:
+      - application/json;charset=UTF-8
+      parameters:
+      - in: body
+        name: mobileSubscriptionDto
+        description: mobileSubscriptionDto
+        required: true
+        schema:
+          $ref: '#/definitions/MobileSubscriptionCreateRequestDto'
+      responses:
+        '201':
+          description: The request has been successfully processed and a mobile subscription has been created.
+          schema:
+            $ref: '#/definitions/MobileSubscriptionDto'
+        '400':
+          description: The request is rejected because it was not understood by the server due to malformed syntax. Do not repeat the request without modifications.
+        '422':
+          description: The request is rejected because the server was unable to process the given request due to semantic validations. Do not repeat the request without modifications.
+      deprecated: false
+  '/mobileSubscription/{id}':
+    delete:
+      tags:
+      - mobile-controller
+      summary: Delete a mobile subscription.
+      operationId: deleteMobileSubscriptionUsingDELETE
+      produces:
+      - application/json;charset=UTF-8
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: The request has been successfully processed and the mobile subscription has been deleted.
+        '400':
+          description: The request is rejected because it was not understood by the server due to malformed syntax. Do not repeat the request without modifications.
+        '422':
+          description: The request is rejected because the server was unable to process the given request due to semantic validations. Do not repeat the request without modifications.
+        '500':
+          description: The request is rejected because the server was unable to find the entity with the id provided.
+      deprecated: false
+    patch:
+      tags:
+      - mobile-controller
+      summary: Update a mobile subscription.
+      operationId: updateMobileSubscriptionUsingPATCH
+      consumes:
+      - application/json
+      produces:
+      - application/json;charset=UTF-8
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: updates
+        description: updates
+        required: true
+        schema:
+          $ref: '#/definitions/MobileSubscriptionUpdateRequestDto'
+      responses:
+        '200':
+          description: The request has been successfully processed and the mobile subscription has been updated.
+          schema:
+            $ref: '#/definitions/MobileSubscriptionDto'
+        '400':
+          description: The request is rejected because it was not understood by the server due to malformed syntax. Do not repeat the request without modifications.
+        '422':
+          description: The request is rejected because the server was unable to process the given request due to semantic validations. Do not repeat the request without modifications.
+        '500':
+          description: The request is rejected because the server was unable to find the entity with the id provided.
+      deprecated: false
+definitions:
+  MobileSubscriptionCreateRequestDto:
+    type: object
+    properties:
+      customerIdOwner:
+        type: integer
+        format: int32
+      customerIdUser:
+        type: integer
+        format: int32
+      msisdn:
+        type: string
+      serviceType:
+        type: string
+        enum:
+        - MOBILE_PREPAID
+        - MOBILE_POSTPAID
+    title: MobileSubscriptionCreateRequestDto
+  MobileSubscriptionDto:
+    type: object
+    properties:
+      customerIdOwner:
+        type: integer
+        format: int32
+      customerIdUser:
+        type: integer
+        format: int32
+      id:
+        type: integer
+        format: int32
+      msisdn:
+        type: string
+      serviceStartDate:
+        type: integer
+        format: int64
+      serviceType:
+        type: string
+        enum:
+        - MOBILE_PREPAID
+        - MOBILE_POSTPAID
+    title: MobileSubscriptionDto
+  MobileSubscriptionUpdateRequestDto:
+    type: object
+    properties:
+      customerIdOwner:
+        type: integer
+        format: int32
+      customerIdUser:
+        type: integer
+        format: int32
+      serviceType:
+        type: string
+        enum:
+        - MOBILE_PREPAID
+        - MOBILE_POSTPAID
+    title: MobileSubscriptionUpdateRequestDto
